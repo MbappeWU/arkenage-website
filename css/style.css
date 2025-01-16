@@ -144,6 +144,36 @@ main {
 
 .game-placeholder {
     text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, var(--primary-color), #34495e);
+    border-radius: 10px;
+    color: var(--white);
+}
+
+.game-placeholder h3 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+}
+
+.game-placeholder p {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.coming-soon-timer {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.coming-soon-timer p {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--accent-color);
 }
 
 .play-button {
