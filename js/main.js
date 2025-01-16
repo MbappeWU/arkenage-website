@@ -36,9 +36,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (playButton) {
         playButton.addEventListener('click', (e) => {
             e.preventDefault();
-            // 这里添加游戏加载逻辑
             const gameContainer = document.querySelector('.game-container');
-            gameContainer.innerHTML = '<iframe src="游戏URL" frameborder="0" style="width: 100%; height: 100%;"></iframe>';
+            // 使用全屏iframe加载游戏
+            gameContainer.innerHTML = `
+                <iframe 
+                    src="https://arkenage.netlify.app" 
+                    frameborder="0" 
+                    style="width: 100%; height: 600px; border-radius: 10px;"
+                    allowfullscreen
+                ></iframe>
+            `;
+            // 移除游戏占位符
+            const placeholder = document.querySelector('.game-placeholder');
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
         });
     }
 }); 
