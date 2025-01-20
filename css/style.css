@@ -282,4 +282,54 @@ footer {
     position: absolute;
     left: 0;
     color: var(--accent-color);
+}
+
+.development-status {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    text-align: left;
+}
+
+.development-status p {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    color: var(--accent-color);
+}
+
+.development-status ul {
+    list-style: none;
+    padding: 0;
+}
+
+.development-status ul li {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+    position: relative;
+    font-size: 1.1rem;
+}
+
+.development-status ul li:before {
+    position: absolute;
+    left: 0;
+    font-size: 1.2rem;
+}
+
+.development-status ul li:nth-child(1):before,
+.development-status ul li:nth-child(2):before {
+    content: "✓";
+    color: #2ecc71;
+}
+
+.development-status ul li:nth-child(3):before {
+    content: "→";
+    color: var(--accent-color);
+}
+
+.development-status ul li:nth-child(4):before,
+.development-status ul li:nth-child(5):before {
+    content: "⋯";
+    color: #bdc3c7;
 } 
