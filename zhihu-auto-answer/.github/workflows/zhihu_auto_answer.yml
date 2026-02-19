@@ -1,0 +1,82 @@
+name: 知乎自动回答
+
+on:
+  # 定时触发：每天晚上 20:30（北京时间）
+  schedule:
+    - cron: '30 12 * * 1,3,5'  # UTC 12:30 = 北京时间 20:30，周一三五执行
+
+  # 手机/网页手动触发（随时可在GitHub页面点Run）
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: '演示模式（true=只生成不发布，false=自动发布）'
+        required: true
+        default: 'true'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      answers_count:
+        description: '本次回答几个问题（建议1-2）'
+        required: true
+        default: '2'
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '3'
+
+jobs:
+  answer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 配置 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 安装依赖
+        run: pip install anthropic requests
+
+      - name: 执行自动回答
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ZHIHU_COOKIE: ${{ secrets.ZHIHU_COOKIE }}
+          # 定时触发时默认演示模式，手动触发时用输入值
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
+          ANSWERS_PER_RUN: ${{ github.event.inputs.answers_count || '2' }}
+        run: python src/generator.py
+
+      - name: 上传回答结果（可在GitHub页面查看）
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zhihu-answers-${{ github.run_number }}
+          path: results.json
+          retention-days: 30
+
+      - name: 发送邮件通知（回答预览）
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          to: ${{ secrets.GMAIL_USER }}
+          subject: '知乎回答已生成 #${{ github.run_number }}'
+          body: |
+            本次自动回答已完成，请查看附件中的 results.json 确认内容。
+
+            如需发布，请前往 GitHub Actions 页面手动触发，并将 dry_run 设为 false。
+
+            查看本次运行详情：
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          attachments: results.json
+        continue-on-error: true  # 邮件发送失败不影响主流程
