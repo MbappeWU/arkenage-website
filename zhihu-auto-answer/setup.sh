@@ -35,7 +35,7 @@ if gh repo view "$GITHUB_USER/$REPO_NAME" &> /dev/null; then
     echo "⚠️  仓库 $GITHUB_USER/$REPO_NAME 已存在，跳过创建"
 else
     echo "📦 创建私有仓库: $GITHUB_USER/$REPO_NAME ..."
-    gh repo create "$REPO_NAME" --private --description "知乎自动回答机器人 - 基于 Claude API"
+    gh repo create "$REPO_NAME" --private --description "知乎自动回答机器人 - 基于 MiniMax M2.5"
     echo "✅ 私有仓库创建成功"
 fi
 echo ""
@@ -86,7 +86,7 @@ configure_secret() {
     echo ""
 }
 
-configure_secret "ANTHROPIC_API_KEY" "Claude API 密钥"
+configure_secret "MINIMAX_API_KEY"   "MiniMax API 密钥（platform.minimax.io 获取）"
 configure_secret "ZHIHU_COOKIE"      "知乎登录 Cookie（F12 → Network → 请求头 → Cookie）"
 configure_secret "GMAIL_USER"        "Gmail 邮箱地址（用于接收通知）"
 configure_secret "GMAIL_APP_PASSWORD" "Gmail 应用专用密码"

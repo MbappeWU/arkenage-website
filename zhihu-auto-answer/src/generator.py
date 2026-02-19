@@ -9,7 +9,6 @@ import time
 import random
 import requests
 import re
-from anthropic import Anthropic
 
 # ============================================================
 # 账号人设 - 核心提示词
@@ -151,10 +150,33 @@ class ZhihuClient:
 
 
 class AnswerGenerator:
-    """AI回答生成器"""
+    """AI回答生成器 - MiniMax M2.5"""
+
+    API_URL = "https://api.minimax.io/v1/text/chatcompletion_v2"
 
     def __init__(self, api_key: str):
-        self.client = Anthropic(api_key=api_key)
+        self.api_key = api_key
+        self.headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        }
+
+    def _chat(self, messages: list, max_tokens: int = 2000) -> str:
+        """调用 MiniMax M2.5 API"""
+        payload = {
+            "model": "MiniMax-M2.5",
+            "messages": messages,
+            "temperature": 0.9,
+            "top_p": 0.95,
+            "max_tokens": max_tokens,
+        }
+        resp = requests.post(self.API_URL, headers=self.headers, json=payload, timeout=120)
+        resp.raise_for_status()
+        data = resp.json()
+        content = data["choices"][0]["message"]["content"]
+        # MiniMax M2.5 可能返回 <think>...</think> 推理标签，去掉只保留最终回答
+        content = re.sub(r'<think>[\s\S]*?</think>', '', content).strip()
+        return content
 
     def score_question(self, question: dict, existing_answers: list) -> float:
         """问题适合度评分（0-10分）"""
@@ -224,13 +246,11 @@ class AnswerGenerator:
 
 直接输出回答正文，不要任何前缀。"""
 
-        resp = self.client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=2000,
-            system=PERSONA_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return resp.content[0].text
+        messages = [
+            {"role": "system", "content": PERSONA_SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ]
+        return self._chat(messages, max_tokens=2000)
 
     def quality_check(self, question_title: str, answer: str) -> dict:
         """质量审查"""
@@ -252,13 +272,9 @@ class AnswerGenerator:
 
 pass标准：total >= 38分"""
 
-        resp = self.client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=300,
-            messages=[{"role": "user", "content": prompt}],
-        )
+        messages = [{"role": "user", "content": prompt}]
         try:
-            text = resp.content[0].text
+            text = self._chat(messages, max_tokens=300)
             match = re.search(r'\{.*\}', text, re.DOTALL)
             if match:
                 return json.loads(match.group())
@@ -277,13 +293,11 @@ pass标准：total >= 38分"""
 保留核心内容框架，针对改进点重写，要更真实、更有内部视角、更去AI味。
 直接输出改进后的回答，不要前缀。"""
 
-        resp = self.client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=2000,
-            system=PERSONA_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return resp.content[0].text
+        messages = [
+            {"role": "system", "content": PERSONA_SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ]
+        return self._chat(messages, max_tokens=2000)
 
 
 class ZhihuBot:
@@ -291,7 +305,7 @@ class ZhihuBot:
 
     def __init__(self):
         self.zhihu = ZhihuClient(os.environ["ZHIHU_COOKIE"])
-        self.generator = AnswerGenerator(os.environ["ANTHROPIC_API_KEY"])
+        self.generator = AnswerGenerator(os.environ["MINIMAX_API_KEY"])
         self.dry_run = os.environ.get("DRY_RUN", "true").lower() == "true"
         self.answers_per_run = int(os.environ.get("ANSWERS_PER_RUN", "2"))
 
