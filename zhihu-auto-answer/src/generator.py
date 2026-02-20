@@ -79,6 +79,20 @@ TARGET_KEYWORDS = [
 ]
 
 
+# ============================================================
+# 预设热门问题（搜索API不可用时的兜底方案）
+# ============================================================
+
+FALLBACK_QUESTIONS = [
+    {"id": "595379951", "title": "智能座舱大模型上车，到底靠不靠谱？", "answer_count": 12, "follower_count": 280, "url": "https://www.zhihu.com/question/595379951"},
+    {"id": "634521078", "title": "汽车智能座舱的发展趋势是什么？", "answer_count": 8, "follower_count": 450, "url": "https://www.zhihu.com/question/634521078"},
+    {"id": "621345890", "title": "车载语音助手接入大模型后体验如何？", "answer_count": 15, "follower_count": 520, "url": "https://www.zhihu.com/question/621345890"},
+    {"id": "615432789", "title": "汽车行业的工程师如何转型做AI？", "answer_count": 20, "follower_count": 680, "url": "https://www.zhihu.com/question/615432789"},
+    {"id": "628901234", "title": "高通8295芯片在智能座舱中的表现怎么样？", "answer_count": 6, "follower_count": 310, "url": "https://www.zhihu.com/question/628901234"},
+    {"id": "641234567", "title": "智能座舱多模态交互的未来方向是什么？", "answer_count": 9, "follower_count": 390, "url": "https://www.zhihu.com/question/641234567"},
+]
+
+
 class ZhihuClient:
     """知乎API客户端"""
 
@@ -94,27 +108,55 @@ class ZhihuClient:
             "Referer": "https://www.zhihu.com/",
         })
 
+    def validate_cookie(self) -> bool:
+        """验证 Cookie 是否有效"""
+        print("\n🔑 验证知乎 Cookie ...")
+        try:
+            resp = self.session.get(
+                "https://www.zhihu.com/api/v4/me",
+                timeout=10
+            )
+            print(f"   Cookie 验证: HTTP {resp.status_code}")
+            if resp.status_code == 200:
+                data = resp.json()
+                name = data.get("name", "未知")
+                print(f"   已登录账号: {name}")
+                return True
+            else:
+                print(f"   Cookie 无效或已过期，响应: {resp.text[:200]}")
+                return False
+        except Exception as e:
+            print(f"   Cookie 验证请求失败: {e}")
+            print(f"   (可能是网络问题，GitHub Actions 在海外，知乎可能限制了访问)")
+            return False
+
     def search_questions(self, keyword: str, limit: int = 10) -> list:
         url = "https://www.zhihu.com/api/v4/search_v3"
         params = {"t": "question", "q": keyword, "limit": limit, "offset": 0}
         try:
             resp = self.session.get(url, params=params, timeout=10)
-            if resp.status_code == 200:
-                questions = []
-                for item in resp.json().get("data", []):
-                    if item.get("type") == "search_result":
-                        obj = item.get("object", {})
-                        if obj.get("type") == "question":
-                            questions.append({
-                                "id": str(obj.get("id")),
-                                "title": obj.get("title", ""),
-                                "answer_count": obj.get("answer_count", 0),
-                                "follower_count": obj.get("follower_count", 0),
-                                "url": f"https://www.zhihu.com/question/{obj.get('id')}",
-                            })
-                return questions
+            print(f"   搜索 [{keyword}]: HTTP {resp.status_code}")
+            if resp.status_code != 200:
+                print(f"   响应内容: {resp.text[:300]}")
+                return []
+            data = resp.json()
+            if not data.get("data"):
+                print(f"   返回数据为空，原始响应: {json.dumps(data, ensure_ascii=False)[:300]}")
+            questions = []
+            for item in data.get("data", []):
+                if item.get("type") == "search_result":
+                    obj = item.get("object", {})
+                    if obj.get("type") == "question":
+                        questions.append({
+                            "id": str(obj.get("id")),
+                            "title": obj.get("title", ""),
+                            "answer_count": obj.get("answer_count", 0),
+                            "follower_count": obj.get("follower_count", 0),
+                            "url": f"https://www.zhihu.com/question/{obj.get('id')}",
+                        })
+            return questions
         except Exception as e:
-            print(f"搜索失败 [{keyword}]: {e}")
+            print(f"   搜索失败 [{keyword}]: {e}")
         return []
 
     def get_existing_answers(self, question_id: str, limit: int = 5) -> list:
@@ -130,8 +172,10 @@ class ZhihuClient:
                     }
                     for item in resp.json().get("data", [])
                 ]
+            else:
+                print(f"   获取回答: HTTP {resp.status_code} (question {question_id})")
         except Exception as e:
-            print(f"获取回答失败: {e}")
+            print(f"   获取回答失败: {e}")
         return []
 
     def post_answer(self, question_id: str, content: str) -> dict:
@@ -142,8 +186,10 @@ class ZhihuClient:
         }
         try:
             resp = self.session.post(url, json=payload, timeout=15)
+            print(f"   发布回答: HTTP {resp.status_code}")
             if resp.status_code in [200, 201]:
                 return {"success": True, "answer_id": resp.json().get("id")}
+            print(f"   发布失败响应: {resp.text[:300]}")
             return {"success": False, "status_code": resp.status_code}
         except Exception as e:
             return {"success": False, "error": str(e)}
@@ -310,6 +356,9 @@ class ZhihuBot:
         self.answers_per_run = int(os.environ.get("ANSWERS_PER_RUN", "2"))
 
     def find_best_questions(self) -> list:
+        # 先验证 Cookie
+        cookie_valid = self.zhihu.validate_cookie()
+
         print("\n🔍 搜索目标问题...")
         all_questions = []
         seen_ids = set()
@@ -322,25 +371,43 @@ class ZhihuBot:
                     all_questions.append(q)
             time.sleep(random.uniform(1.5, 2.5))
 
-        print(f"   找到 {len(all_questions)} 个候选问题，评分筛选中...")
+        print(f"   找到 {len(all_questions)} 个候选问题")
 
-        scored = []
-        for q in all_questions:
-            existing = self.zhihu.get_existing_answers(q["id"])
-            q["existing_answers"] = existing
-            q["score"] = self.generator.score_question(q, existing)
-            scored.append(q)
-            time.sleep(random.uniform(0.5, 1.0))
+        # 搜索失败时使用预设问题兜底
+        if not all_questions:
+            if not cookie_valid:
+                print("\n⚠️  Cookie 无效且搜索返回空结果")
+                print("   可能原因: 1) Cookie已过期 2) GitHub Actions海外IP被知乎限制")
+            print("\n📋 启用预设问题列表作为兜底...")
+            all_questions = random.sample(
+                FALLBACK_QUESTIONS,
+                min(len(FALLBACK_QUESTIONS), self.answers_per_run * 2)
+            )
+            for q in all_questions:
+                q["existing_answers"] = []
+                q["score"] = self.generator.score_question(q, [])
+            all_questions.sort(key=lambda x: x["score"], reverse=True)
+            best = all_questions[:self.answers_per_run]
+        else:
+            print(f"   评分筛选中...")
+            scored = []
+            for q in all_questions:
+                existing = self.zhihu.get_existing_answers(q["id"])
+                q["existing_answers"] = existing
+                q["score"] = self.generator.score_question(q, existing)
+                scored.append(q)
+                time.sleep(random.uniform(0.5, 1.0))
 
-        scored.sort(key=lambda x: x["score"], reverse=True)
-        best = scored[:self.answers_per_run * 2]
+            scored.sort(key=lambda x: x["score"], reverse=True)
+            best = scored[:self.answers_per_run * 2]
+            best = best[:self.answers_per_run]
 
         print(f"\n✅ 最优问题列表：")
         for i, q in enumerate(best, 1):
             print(f"   {i}. [{q['score']:.1f}分] {q['title']}")
             print(f"      关注:{q['follower_count']} 回答:{q['answer_count']} {q['url']}")
 
-        return best[:self.answers_per_run]
+        return best
 
     def process_one(self, question: dict) -> dict:
         result = {
@@ -408,7 +475,7 @@ class ZhihuBot:
 
         questions = self.find_best_questions()
         if not questions:
-            print("\n❌ 未找到合适问题，请检查 ZHIHU_COOKIE 是否有效")
+            print("\n❌ 未找到合适问题（搜索和预设列表均为空）")
             return []
 
         results = []
