@@ -364,40 +364,62 @@ class AnswerGenerator:
         return content
 
     def score_question(self, question: dict, existing_answers: list) -> float:
-        """问题适合度评分（0-10分）"""
+        """问题适合度评分（0-10分）
+
+        权重优先级：
+        1. 关注量（最重要，满分4分）—— 关注多=曝光大，<10直接淘汰
+        2. 回答数量（满分3分）—— 回答少=竞争小，但0回答0关注是死题
+        3. 已有回答质量（满分2分）—— 现有回答质量差=更容易出头
+        4. 关键词匹配（满分1.5分）—— 领域相关度
+        """
         score = 0.0
 
+        # ① 关注量（权重最大，满分4.0）
         followers = question.get("follower_count", 0)
-        if 100 <= followers <= 3000:
-            score += 3.0
-        elif followers > 3000:
-            score += 1.5
-        elif followers > 30:
+        if followers < 10:
+            score += 0  # 没人关注的死题，不给分
+        elif followers < 50:
             score += 1.0
+        elif followers < 200:
+            score += 2.0
+        elif followers < 1000:
+            score += 3.0
+        elif followers < 5000:
+            score += 4.0  # 甜蜜区：关注多但还没大到卷不动
+        else:
+            score += 3.0  # 太热门，竞争激烈，适当降权
 
+        # ② 回答数量（满分3.0）—— 回答少=机会大
         answer_count = question.get("answer_count", 0)
         if answer_count == 0:
-            score += 3.5
+            # 0回答本身不加分也不扣分，取决于关注量
+            # 关注多但没人答=好机会；关注少没人答=死题
+            score += 1.0 if followers >= 50 else 0
         elif answer_count < 5:
-            score += 3.0
+            score += 3.0  # 最佳：有人关注，竞争少
         elif answer_count < 15:
             score += 2.0
         elif answer_count < 30:
             score += 1.0
+        else:
+            score += 0.5
 
+        # ③ 已有回答质量（满分2.0）—— 现有回答水=容易超越
         if existing_answers:
             avg_votes = sum(a.get("voteup_count", 0) for a in existing_answers) / len(existing_answers)
             if avg_votes < 10:
-                score += 2.0
+                score += 2.0  # 现有回答很水
             elif avg_votes < 50:
                 score += 1.0
+            # avg_votes >= 50：已有高赞回答，难出头，不加分
         else:
-            score += 2.0
+            score += 0.5  # 没有回答参考，中性
 
+        # ④ 关键词匹配（满分1.5）
         title = question.get("title", "").lower()
         key_terms = ["座舱", "ai", "大模型", "智能化", "项目", "转型", "落地", "多模态"]
         matches = sum(1 for t in key_terms if t in title)
-        score += min(matches * 0.4, 2.0)
+        score += min(matches * 0.4, 1.5)
 
         return min(score, 10.0)
 
