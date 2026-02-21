@@ -47,7 +47,9 @@ jobs:
           cache-dependency-path: zhihu-auto-answer/requirements.txt
 
       - name: 安装依赖
-        run: pip install requests
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install chromium
 
       - name: 执行自动回答
         env:
@@ -55,6 +57,8 @@ jobs:
           ZHIHU_COOKIE: ${{ secrets.ZHIHU_COOKIE }}
           DRY_RUN: ${{ github.event.inputs.dry_run || 'true' }}
           ANSWERS_PER_RUN: ${{ github.event.inputs.answers_count || '2' }}
+          NOTEBOOKLM_NOTEBOOK_ID: ${{ secrets.NOTEBOOKLM_NOTEBOOK_ID }}
+          NOTEBOOKLM_AUTH_JSON: ${{ secrets.NOTEBOOKLM_AUTH_JSON }}
         run: python src/generator.py
 
       - name: 上传回答结果（可在GitHub页面查看）
@@ -79,6 +83,7 @@ jobs:
           body: |
             本次自动回答已完成，请查看附件中的 results.json 确认内容。
 
+            知识源：NotebookLM 知识库 + 本地素材库
             如需发布，请前往 GitHub Actions 页面手动触发，并将 dry_run 设为 false。
 
             查看本次运行详情：
