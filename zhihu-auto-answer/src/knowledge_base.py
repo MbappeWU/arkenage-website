@@ -6,7 +6,10 @@
 2. 本地硬编码素材库（NotebookLM 不可用时自动降级）
 """
 
-from .notebooklm_client import retrieve_materials
+try:
+    from .notebooklm_client import retrieve_materials
+except ImportError:
+    from notebooklm_client import retrieve_materials
 
 # ============================================================
 # 本地素材库（兜底）
