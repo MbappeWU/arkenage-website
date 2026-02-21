@@ -25,7 +25,7 @@ async def _async_query(notebook_id: str, question: str, timeout: float = 30.0) -
     """异步查询 NotebookLM"""
     from notebooklm import NotebookLMClient
 
-    async with NotebookLMClient.from_storage(timeout=timeout) as client:
+    async with await NotebookLMClient.from_storage(timeout=timeout) as client:
         result = await client.chat.ask(notebook_id, question)
         return {
             "answer": result.answer,
@@ -64,7 +64,7 @@ async def _async_list_notebooks() -> list:
     """异步列出所有笔记本"""
     from notebooklm import NotebookLMClient
 
-    async with NotebookLMClient.from_storage() as client:
+    async with await NotebookLMClient.from_storage() as client:
         notebooks = await client.notebooks.list()
         return [
             {"id": nb.id, "title": nb.title}
@@ -99,9 +99,14 @@ def retrieve_materials(question_title: str) -> str:
         print("   ⚠️  未配置 NOTEBOOKLM_NOTEBOOK_ID，跳过 NotebookLM 检索")
         return ""
 
-    # 检查认证是否可用
+    # 检查认证是否可用，将环境变量写成文件供 notebooklm-py 读取
     auth_json = os.environ.get("NOTEBOOKLM_AUTH_JSON", "").strip()
     auth_file = os.path.expanduser("~/.notebooklm/storage_state.json")
+    if auth_json and not os.path.exists(auth_file):
+        os.makedirs(os.path.dirname(auth_file), exist_ok=True)
+        with open(auth_file, "w") as f:
+            f.write(auth_json)
+        print(f"   ✅ 已从环境变量写入认证文件: {auth_file}")
     if not auth_json and not os.path.exists(auth_file):
         print("   ⚠️  未找到 NotebookLM 认证信息，跳过检索")
         return ""
