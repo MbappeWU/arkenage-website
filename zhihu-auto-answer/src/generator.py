@@ -147,9 +147,12 @@ class ZhihuClient:
                 if item.get("type") == "search_result":
                     obj = item.get("object", {})
                     if obj.get("type") == "question":
+                        # 清理搜索API返回的HTML高亮标签
+                        raw_title = obj.get("title", "")
+                        clean_title = re.sub(r'</?em>', '', raw_title)
                         questions.append({
                             "id": str(obj.get("id")),
-                            "title": obj.get("title", ""),
+                            "title": clean_title,
                             "answer_count": obj.get("answer_count", 0),
                             "follower_count": obj.get("follower_count", 0),
                             "url": f"https://www.zhihu.com/question/{obj.get('id')}",
@@ -165,12 +168,13 @@ class ZhihuClient:
         try:
             resp = self.session.get(url, params=params, timeout=10)
             if resp.status_code == 200:
+                data = resp.json().get("data") or []
                 return [
                     {
                         "content": item.get("content", "")[:400],
                         "voteup_count": item.get("voteup_count", 0),
                     }
-                    for item in resp.json().get("data", [])
+                    for item in data
                 ]
             else:
                 print(f"   获取回答: HTTP {resp.status_code} (question {question_id})")
