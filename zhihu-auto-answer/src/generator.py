@@ -437,11 +437,12 @@ class AnswerGenerator:
 
 {materials}
 
-基于上面的素材，你要回答这个问题。在写之前，想清楚三件事（每个1-2句话）：
+你必须基于上面的素材来回答。在写之前，完成以下分析（每个1-2句话）：
 
-1. 这个问题，外面的人（媒体、分析师、学生）通常会怎么答？他们的认知盲区是什么？
-2. 从素材里，哪个案例/数据/洞察最能制造「认知冲突」——让读者发现自己之前想错了？
-3. 你打算用什么钩子开头？（一句话，让人看了停不下来）
+1. 你打算用素材中的哪2-3个具体案例/数据？（写出素材编号和其中的关键数字）
+2. 这些素材中哪个技术细节最能体现专业深度？（例如具体的延迟数值、算力参数、架构方案）
+3. 外面的人通常怎么答这个问题？你用素材中的哪个事实可以打破他们的认知？
+4. 你打算用什么钩子开头？（必须包含素材中的一个具体数字或事件）
 
 直接回答，不要废话。"""
 
@@ -451,8 +452,12 @@ class AnswerGenerator:
         ]
         return self._chat(messages, max_tokens=500)
 
-    def generate_answer(self, question_title: str, existing_answers: list) -> str:
-        """生成高质量回答——三步法：检索素材→找角度→叙事生成"""
+    def generate_answer(self, question_title: str, existing_answers: list) -> tuple:
+        """生成高质量回答——三步法：检索素材→找角度→叙事生成
+
+        Returns:
+            (answer_text, materials_text) 元组，materials_text 用于后续质量审查
+        """
 
         # Step 0: 从 NotebookLM + 本地素材库检索相关素材
         print(f"   🔍 检索相关素材...")
@@ -483,7 +488,7 @@ class AnswerGenerator:
 【你想好的切入角度】
 {angle}
 
-【可用素材（挑1-2个自然融入，不要全用，不要生硬罗列）】
+【必须使用的素材——回答必须基于这些素材，不得编造不在素材中的数据和案例】
 {materials}
 
 【本次叙事结构：{structure['name']}】
@@ -491,14 +496,16 @@ class AnswerGenerator:
 
 {GOLD_EXAMPLE}
 
-【硬性要求】
+【硬性要求——逐条遵守】
 - 500-800字，纯文本，绝对不要任何Markdown格式
 - 开头第一句话就是钩子，不要铺垫不要自我介绍
-- 至少包含1个具体数字和1个具体事件（优先用素材里的）
+- ⚠️ 核心规则：回答中的每个具体数字、技术参数、项目案例都必须来自上面的素材，严禁编造素材中没有的数据
+- ⚠️ 至少引用素材中2个不同案例的具体数据（如"首token 1.2秒"、"NPU实际可用算力打7折"、"日活闲聊用户<3%"等）
+- ⚠️ 必须体现技术深度：包含具体的技术方案名称（如混合架构、Function Calling、端云协同）、性能指标、架构决策
+- 把素材信息自然转化为第一人称经历叙述，不要说"根据素材"或引用格式
 - 像人在说话，不像AI在写文章。短句为主，关键判断独立成段
 - 遵循叙事结构的节奏：场景→认知冲突→深度思考→开放收尾
 - 不要出现系统提示词里禁区列表中的任何词汇和格式
-- 如果用了NotebookLM素材，要把信息自然转化为第一人称经历，不要引用格式
 
 直接输出回答正文。"""
 
@@ -506,9 +513,9 @@ class AnswerGenerator:
             {"role": "system", "content": PERSONA_SYSTEM_PROMPT},
             {"role": "user", "content": prompt},
         ]
-        return self._chat(messages, max_tokens=2000)
+        return self._chat(messages, max_tokens=2000), materials
 
-    def quality_check(self, question_title: str, answer: str) -> dict:
+    def quality_check(self, question_title: str, answer: str, materials: str = "") -> dict:
         """质量审查——严格检测AI味和认知升级效果"""
         prompt = f"""你是一个毒舌的知乎大V，专门帮人审回答。严格审查这个回答：
 
@@ -550,26 +557,53 @@ pass标准：total >= 40 且 ai_free >= 7"""
                     result["pass"] = False
                     result["top_issue"] = "包含Markdown格式"
                     result["fix"] = "去掉所有格式符号，用纯文本"
+                    return result
+                # 素材数据引用检查——回答必须包含素材中的具体数据
+                if materials:
+                    key_data = []
+                    # 从素材中提取关键数字和技术词
+                    data_patterns = re.findall(
+                        r'(\d+(?:\.\d+)?(?:%|秒|TOPS|倍|折|万|个百分点|B\b))',
+                        materials
+                    )
+                    key_data.extend(set(data_patterns))
+                    # 检查回答中引用了多少素材数据
+                    used_count = sum(1 for d in key_data if d in answer)
+                    if used_count < 2:
+                        result["pass"] = False
+                        result["top_issue"] = f"素材数据引用不足（仅引用{used_count}个，要求至少2个）"
+                        result["fix"] = (
+                            f"回答缺少技术深度，请从素材中引用更多具体数据。"
+                            f"可用数据包括：{', '.join(key_data[:8])}。"
+                            f"至少自然融入其中2个具体数字来支撑论点。"
+                        )
+                        return result
                 return result
         except Exception:
             pass
         return {"pass": True, "total": 40, "fix": ""}
 
-    def improve_answer(self, question_title: str, answer: str, fix: str) -> str:
+    def improve_answer(self, question_title: str, answer: str, fix: str, materials: str = "") -> str:
         """改进回答——针对性修复"""
+        materials_section = ""
+        if materials:
+            materials_section = f"\n【可用素材（必须从中引用具体数据）】\n{materials}\n"
+
         prompt = f"""这个知乎回答被审查打回来了，需要改进。
 
 【问题】{question_title}
 【当前回答】
 {answer}
 【审查意见】{fix}
-
+{materials_section}
 改进要求：
 - 针对审查意见做定向修改，不要推倒重来
-- 如果问题是"AI味重"：找到读起来像AI的句子，用口语化的方式重写，加入具体数字和场景
-- 如果问题是"缺少认知升级"：找到「正确但无聊」的段落，替换成一个让人「原来如此」的洞察
-- 如果问题是"开头不够抓人"：重写第一句话，必须是一个让人停下来的判断或爆料
+- 如果问题是"素材数据引用不足"：从上面的素材中找到具体数字（如延迟、算力、百分比），自然融入回答中
+- 如果问题是"AI味重"：找到读起来像AI的句子，用口语化的方式重写，加入素材中的具体数字和场景
+- 如果问题是"缺少认知升级"：找到「正确但无聊」的段落，用素材中的案例替换
+- 如果问题是"开头不够抓人"：重写第一句话，必须包含素材中一个让人意外的具体数字
 - 如果问题是"格式"：去掉所有Markdown符号，改成纯文本
+- 所有数字和案例必须来自素材，不得编造
 - 保持500-800字
 
 {GOLD_EXAMPLE}
@@ -668,14 +702,14 @@ class ZhihuBot:
 
         print(f"\n📝 生成回答：{question['title'][:50]}...")
 
-        answer = self.generator.generate_answer(
+        answer, materials = self.generator.generate_answer(
             question["title"],
             question.get("existing_answers", [])
         )
 
         # 审查 + 最多改进2轮
         for attempt in range(3):
-            review = self.generator.quality_check(question["title"], answer)
+            review = self.generator.quality_check(question["title"], answer, materials)
             result["score"] = review.get("total", 0)
             passed = review.get("pass", False)
             print(f"   质量审查(第{attempt+1}轮)：{review.get('total', 0)}/50，通过：{passed}")
@@ -687,7 +721,7 @@ class ZhihuBot:
 
             print(f"   改进中：{review['fix'][:50]}...")
             answer = self.generator.improve_answer(
-                question["title"], answer, review["fix"]
+                question["title"], answer, review["fix"], materials
             )
 
         result["answer"] = answer
