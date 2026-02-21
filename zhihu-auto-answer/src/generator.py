@@ -202,10 +202,9 @@ class ZhihuClient:
 class AnswerGenerator:
     """AI回答生成器 - MiniMax"""
 
-    # 新平台（api.minimax.io）和旧平台（api.minimax.chat）自动适配
     API_URLS = [
+        "https://api.minimaxi.com/v1/text/chatcompletion_v2",
         "https://api.minimax.chat/v1/text/chatcompletion_v2",
-        "https://api.minimax.io/v1/text/chatcompletion_v2",
     ]
 
     def __init__(self, api_key: str):
