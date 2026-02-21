@@ -200,9 +200,12 @@ class ZhihuClient:
 
 
 class AnswerGenerator:
-    """AI回答生成器 - MiniMax M2.5"""
+    """AI回答生成器 - MiniMax"""
 
-    API_URL = "https://api.minimax.io/v1/text/chatcompletion_v2"
+    API_URLS = [
+        "https://api.minimaxi.com/v1/text/chatcompletion_v2",
+        "https://api.minimax.chat/v1/text/chatcompletion_v2",
+    ]
 
     def __init__(self, api_key: str):
         self.api_key = api_key
@@ -210,9 +213,37 @@ class AnswerGenerator:
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
         }
+        self.api_url = None  # 自动探测
+
+    def _detect_api_url(self):
+        """探测哪个 API 端点可用"""
+        print("   探测 MiniMax API 端点...")
+        test_payload = {
+            "model": "MiniMax-M2.5",
+            "messages": [{"role": "user", "content": "hi"}],
+            "max_tokens": 5,
+        }
+        for url in self.API_URLS:
+            try:
+                resp = requests.post(url, headers=self.headers, json=test_payload, timeout=15)
+                data = resp.json()
+                status = data.get("base_resp", {}).get("status_code", -1)
+                print(f"   {url} → HTTP {resp.status_code}, status_code={status}")
+                if resp.status_code == 200 and status == 0:
+                    self.api_url = url
+                    print(f"   ✅ 使用端点: {url}")
+                    return
+            except Exception as e:
+                print(f"   {url} → 失败: {e}")
+        # 都不行，默认用第一个，让后续报错信息更清晰
+        self.api_url = self.API_URLS[0]
+        print(f"   ⚠️  所有端点探测失败，默认使用: {self.api_url}")
 
     def _chat(self, messages: list, max_tokens: int = 2000) -> str:
-        """调用 MiniMax M2.5 API"""
+        """调用 MiniMax API"""
+        if not self.api_url:
+            self._detect_api_url()
+
         payload = {
             "model": "MiniMax-M2.5",
             "messages": messages,
@@ -220,7 +251,7 @@ class AnswerGenerator:
             "top_p": 0.95,
             "max_tokens": max_tokens,
         }
-        resp = requests.post(self.API_URL, headers=self.headers, json=payload, timeout=120)
+        resp = requests.post(self.api_url, headers=self.headers, json=payload, timeout=120)
         data = resp.json()
 
         # 检查 HTTP 错误
@@ -371,10 +402,16 @@ class ZhihuBot:
     """主控流程"""
 
     def __init__(self):
-        self.zhihu = ZhihuClient(os.environ["ZHIHU_COOKIE"])
-        self.generator = AnswerGenerator(os.environ["MINIMAX_API_KEY"])
+        self.zhihu = ZhihuClient(os.environ["ZHIHU_COOKIE"].strip())
+        api_key = os.environ["MINIMAX_API_KEY"].strip()
+        self.generator = AnswerGenerator(api_key)
         self.dry_run = os.environ.get("DRY_RUN", "true").lower() == "true"
         self.answers_per_run = int(os.environ.get("ANSWERS_PER_RUN", "2"))
+        # 打印脱敏的 API Key 前后几位，方便排查
+        if len(api_key) > 10:
+            print(f"   MiniMax API Key: {api_key[:6]}...{api_key[-4:]}")
+        else:
+            print(f"   ⚠️  MiniMax API Key 过短（{len(api_key)}字符），可能不正确")
 
     def find_best_questions(self) -> list:
         # 先验证 Cookie
