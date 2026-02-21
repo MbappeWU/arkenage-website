@@ -221,8 +221,25 @@ class AnswerGenerator:
             "max_tokens": max_tokens,
         }
         resp = requests.post(self.API_URL, headers=self.headers, json=payload, timeout=120)
-        resp.raise_for_status()
         data = resp.json()
+
+        # 检查 HTTP 错误
+        if resp.status_code != 200:
+            print(f"   MiniMax API 错误: HTTP {resp.status_code}")
+            print(f"   响应: {json.dumps(data, ensure_ascii=False)[:500]}")
+            resp.raise_for_status()
+
+        # 检查 API 级别错误（MiniMax 有时 HTTP 200 但返回错误）
+        if "base_resp" in data and data["base_resp"].get("status_code", 0) != 0:
+            err = data["base_resp"]
+            print(f"   MiniMax API 业务错误: {err.get('status_code')} - {err.get('status_msg', '')}")
+            raise RuntimeError(f"MiniMax API error: {err.get('status_msg', 'unknown')}")
+
+        if "choices" not in data or not data["choices"]:
+            print(f"   MiniMax API 返回无 choices 字段")
+            print(f"   完整响应: {json.dumps(data, ensure_ascii=False)[:500]}")
+            raise RuntimeError("MiniMax API returned no choices")
+
         content = data["choices"][0]["message"]["content"]
         # MiniMax M2.5 可能返回 <think>...</think> 推理标签，去掉只保留最终回答
         content = re.sub(r'<think>[\s\S]*?</think>', '', content).strip()
