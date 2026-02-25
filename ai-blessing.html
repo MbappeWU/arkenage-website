@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI春节祝福生成器</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        h1 { text-align: center; color: #333; margin-bottom: 20px; font-size: 24px; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #555; font-weight: 500; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; transition: border-color 0.3s; }
+        select:focus, input:focus { border-color: #667eea; outline: none; }
+        button { width: 100%; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        button:hover { transform: scale(1.02); }
+        button:disabled { opacity: 0.6; cursor: not-allowed; }
+        .result { margin-top: 25px; padding: 20px; background: #f8f9fa; border-radius: 12px; display: none; }
+        .result.show { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .result h3 { color: #667eea; margin-bottom: 15px; }
+        .result p { color: #333; line-height: 1.8; margin-bottom: 10px; padding: 10px; background: white; border-radius: 8px; }
+        .copy-btn { display: inline-block; margin-top: 10px; padding: 8px 20px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+        .copy-btn:hover { background: #218838; }
+        .tips { text-align: center; margin-top: 20px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎊 AI 祝福语生成器</h1>
+        <div class="input-group">
+            <label>选择场景</label>
+            <select id="scene">
+                <option value="spring">春节祝福</option>
+                <option value="birthday">生日祝福</option>
+                <option value="wedding">新婚祝福</option>
+                <option value="baby">满月/百日宴</option>
+                <option value="newyear">新年祝福</option>
+                <option value="midautumn">中秋祝福</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>选择风格</label>
+            <select id="style">
+                <option value="warm">温馨暖心</option>
+                <option value="humor">幽默风趣</option>
+                <option value="formal">正式端庄</option>
+                <option value="poetic">诗意古风</option>
+                <option value="trendy">潮流网络风</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>指定人名（选填）</label>
+            <input type="text" id="name" placeholder="如：张三">
+        </div>
+        <button onclick="generate()" id="genBtn">✨ 生成祝福语</button>
+        <div class="result" id="result">
+            <h3>📝 生成的祝福语：</h3>
+            <div id="content"></div>
+            <button class="copy-btn" onclick="copyAll()">📋 一键复制全部</button>
+        </div>
+        <p class="tips">💡 提示：点击复制后可直接粘贴到微信发送</p>
+    </div>
+    <script>
+        const templates = {
+            spring: {
+                warm: ["亲爱的{name}，新春佳节到，愿你新的一年里，身体健康，工作顺利，家庭幸福！🎉", "{name}，祝你春节快乐，万事如意，岁岁平安！", "愿{name}在新的一年里，财源广进，好运连连！"],
+                humor: ["{name}，过年啦！红包准备好了吗？祝你新的一年暴富！", "{name}，春节到了，别熬夜抢红包了，早点睡吧！哈哈哈", "{name}新年好！祝你新的一年里，颜值与财运齐飞！"],
+                formal: ["{name}，值此新春佳节之际，谨致以诚挚的问候和祝福！", "尊敬的{name}，祝您新春快乐，阖家欢乐！"],
+                poetic: ["{name}，春风送暖入屠苏，千家万户瞳瞳日总把新桃换旧符", "{name}，岁月如歌，新春至，愿君岁月静好"],
+                trendy: ["{name}，2024666，新年YYDS！", "{name}，新的一年也要继续加油鸭！"]
+            },
+            birthday: {
+                warm: ["{name}，生日快乐！愿你每天都有好心情，永远年轻！", "祝{name}生日快乐，新的一岁万事顺意！"],
+                humor: ["{name}，又老了一岁！但是依然年轻貌美！生日快乐！", "{name}，生日快乐！许个愿吧，万一实现了呢？"],
+                formal: ["{name}，恭祝生日快乐，愿您心想事成！"],
+                poetic: ["{name}，生辰吉乐，岁岁安康！"],
+                trendy: ["{name}，生日快乐！新的一岁要更棒！"]
+            },
+            wedding: {
+                warm: ["祝{name}和爱人百年好合，永结同心！", "{name}，新婚快乐，甜甜蜜蜜！"],
+                humor: ["{name}，结婚啦！份子钱准备好了吗？哈哈哈"],
+                formal: ["{name}，祝二位新婚快乐，百年好合！"],
+                poetic: ["{name}，百年修得同船渡，千年修得共枕眠"],
+                trendy: ["{name}，999999999！"]
+            },
+            baby: {
+                warm: ["祝{name}宝宝健康成长，活泼可爱！", "{name}，小天使降临，祝快乐成长！"],
+                humor: ["{name}，人类幼崽加入！恭喜恭喜！"],
+                formal: ["{name}，祝宝宝健康成长，前程似锦！"],
+                poetic: ["{name}，稚子初生，未来可期"],
+                trendy: ["{name}，小小只太可爱了！"]
+            },
+            newyear: {
+                warm: ["{name}，新年快乐！", "{name}，祝新年大吉！"],
+                humor: ["{name}，新年到，霉运退散！"],
+                formal: ["{name}，恭贺新禧！"],
+                poetic: ["{name}，新岁启封"],
+                trendy: ["{name}，2026冲鸭！"]
+            },
+            midautumn: {
+                warm: ["{name}，中秋节快乐！", "祝{name}中秋团圆！"],
+                humor: ["{name}，月饼节快乐！记得吃月饼哦！"],
+                formal: ["{name}，中秋佳节快乐！"],
+                poetic: ["{name}，海上生明月，天涯共此时"],
+                trendy: ["{name}，中秋节yyds！"]
+            }
+        };
+
+        function generate() {
+            const scene = document.getElementById('scene').value;
+            const style = document.getElementById('style').value;
+            let name = document.getElementById('name').value.trim();
+            
+            const btn = document.getElementById('genBtn');
+            btn.disabled = true;
+            btn.textContent = '🤔 AI 创作中...';
+            
+            setTimeout(() => {
+                const list = templates[scene]?.[style] || templates.spring.warm;
+                const randomText = list[Math.floor(Math.random() * list.length)];
+                const finalText = name ? randomText.replace(/{name}/g, name) : randomText.replace(/{name}/g, '朋友');
+                
+                document.getElementById('content').innerHTML = `<p>${finalText}</p>`;
+                document.getElementById('result').classList.add('show');
+                
+                btn.disabled = false;
+                btn.textContent = '✨ 生成祝福语';
+            }, 800);
+        }
+
+        function copyAll() {
+            const text = document.getElementById('content').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('✅ 复制成功！');
+            });
+        }
+    </script>
+</body>
+</html>
