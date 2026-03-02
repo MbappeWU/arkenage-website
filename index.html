@@ -1,97 +1,261 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arken Age - 探索奇幻世界的冒险之旅</title>
-    <link rel="stylesheet" href="css/style.css">
-    <meta name="description" content="Arken Age是一款充满魔法与冒险的开源游戏，邀请您踏上一段史诗般的旅程。">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MacSweep - 安全第一的 macOS 磁盘清理工具</title>
+  <meta name="description" content="MacSweep 是一款安全优先的 macOS 存储清理工具。完全本地运行，不收集任何数据，自信地释放磁盘空间。">
+  <meta name="keywords" content="MacSweep, macOS, 磁盘清理, 存储清理, Mac清理, 缓存清理, 开发者垃圾, 大文件扫描">
+  <link rel="canonical" href="https://arkenage.com/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="MacSweep - Safety-first macOS Storage Cleaner">
+  <meta property="og:description" content="Reclaim disk space with confidence. 6 cleaning modules, zero data collection, fully local.">
+  <meta property="og:url" content="https://arkenage.com">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://arkenage.com/img/screenshot-hero.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MacSweep - Safety-first macOS Storage Cleaner">
+  <meta name="twitter:description" content="Reclaim disk space with confidence. 6 cleaning modules, zero data collection.">
+  <meta name="twitter:image" content="https://arkenage.com/img/screenshot-hero.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "MacSweep",
+    "operatingSystem": "macOS",
+    "applicationCategory": "UtilitiesApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "softwareVersion": "0.1.0",
+    "description": "Safety-first macOS storage cleaner. Reclaim disk space with confidence."
+  }
+  </script>
 </head>
 <body>
-    <header>
-        <nav>
-            <div class="logo">Arken Age</div>
-            <ul>
-                <li><a href="#home">首页</a></li>
-                <li><a href="#story">背景</a></li>
-                <li><a href="#features">特性</a></li>
-                <li><a href="#play">开始游戏</a></li>
-            </ul>
-        </nav>
-    </header>
+  <!-- ==================== NAVBAR ==================== -->
+  <header class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="nav-logo">
+        <svg class="nav-logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="14" fill="url(#lg)" opacity="0.15"/>
+          <path d="M16 6l2.5 6.5L25 15l-6.5 2.5L16 24l-2.5-6.5L7 15l6.5-2.5L16 6z" fill="url(#lg)"/>
+          <defs><linearGradient id="lg" x1="7" y1="6" x2="25" y2="24"><stop stop-color="#8B5CF6"/><stop offset="1" stop-color="#6366F1"/></linearGradient></defs>
+        </svg>
+        <span class="nav-logo-text">MacSweep</span>
+      </a>
+      <nav class="nav-links" id="nav-links">
+        <a href="#features" data-zh="功能" data-en="Features">功能</a>
+        <a href="#safety" data-zh="安全" data-en="Safety">安全</a>
+        <a href="#privacy" data-zh="隐私" data-en="Privacy">隐私</a>
+        <a href="#download" data-zh="下载" data-en="Download">下载</a>
+      </nav>
+      <div class="nav-actions">
+        <div class="lang-toggle">
+          <button class="lang-btn active" data-lang="zh">ZH</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+        <a href="#download" class="btn-primary btn-sm nav-cta" data-zh="免费下载" data-en="Download">免费下载</a>
+        <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </header>
 
-    <main>
-        <section id="home" class="hero">
-            <h1>欢迎来到 Arken Age</h1>
-            <p>踏上一段充满魔法与奇迹的冒险之旅</p>
-            <a href="#play" class="cta-button">立即开始</a>
-        </section>
+  <main>
+    <!-- ==================== HERO ==================== -->
+    <section class="hero" id="hero">
+      <div class="ambient-glow glow-purple"></div>
+      <div class="ambient-glow glow-blue"></div>
+      <div class="container hero-content">
+        <div class="hero-badge fade-up"><span>v0.1.0</span><span class="sep">|</span><span>macOS 12+</span></div>
+        <h1 class="hero-title fade-up">MacSweep</h1>
+        <p class="hero-subtitle fade-up" data-zh="安全第一的 macOS 磁盘清理工具" data-en="Safety-first macOS Storage Cleaner">安全第一的 macOS 磁盘清理工具</p>
+        <p class="hero-tagline fade-up" data-zh="自信地释放磁盘空间。完全本地运行，零数据收集。" data-en="Reclaim disk space with confidence. Fully local, zero data collection.">自信地释放磁盘空间。完全本地运行，零数据收集。</p>
+        <div class="hero-ctas fade-up">
+          <a href="https://github.com/MbappeWU/arkenage-website/releases/latest/download/MacSweep.dmg" class="btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span data-zh="免费下载 DMG" data-en="Download DMG Free">免费下载 DMG</span>
+          </a>
+          <a href="https://github.com/MbappeWU/arkenage-website" class="btn-outline" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            <span data-zh="查看源码" data-en="View Source">查看源码</span>
+          </a>
+        </div>
+        <p class="hero-compat fade-up" data-zh="兼容 macOS 12 Monterey 及以上 · Apple Silicon & Intel" data-en="Compatible with macOS 12 Monterey+ · Apple Silicon & Intel">兼容 macOS 12 Monterey 及以上 · Apple Silicon & Intel</p>
+        <div class="hero-screenshot fade-up">
+          <div class="screenshot-window">
+            <div class="window-dots"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span></div>
+            <img src="img/screenshot-hero.png" alt="MacSweep App Interface" width="1440" height="900" loading="eager">
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <section id="story" class="story">
-            <h2>游戏背景</h2>
-            <div class="story-content">
-                <div class="story-text">
-                    <h3>阿尔肯纪元</h3>
-                    <p>在遥远的阿尔肯大陆，一个古老的预言正在逐渐应验。千年前，强大的魔法文明在一场浩劫中消失，只留下散落各地的遗迹与神秘的魔法水晶。</p>
-                    <p>如今，魔法能量再次苏醒，大陆各地出现了不寻常的异象。作为一位天赋异禀的魔法学徒，你将踏上探索真相的旅程，解开阿尔肯大陆的古老谜题。</p>
-                    <p>在这片充满奇迹与危险的土地上，你需要：</p>
-                    <ul>
-                        <li>探索古老遗迹，收集失落的魔法知识</li>
-                        <li>与各种神秘生物和其他魔法师交互</li>
-                        <li>解开千年之谜，揭示文明消失的真相</li>
-                        <li>在正与邪、秩序与混沌之间做出选择</li>
-                    </ul>
-                </div>
+    <!-- ==================== FEATURES ==================== -->
+    <section class="section" id="features">
+      <div class="container">
+        <h2 class="section-title fade-up" data-zh="六大清理模块" data-en="Six Cleaning Modules">六大清理模块</h2>
+        <p class="section-subtitle fade-up" data-zh="全方位检测 Mac 可清理空间，智能分类一键释放磁盘" data-en="Comprehensive Mac scanning, intelligently categorized for one-click cleanup">全方位检测 Mac 可清理空间，智能分类一键释放磁盘</p>
+        <div class="feature-grid">
+          <div class="feature-card fade-up">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#06B6D4,#3B82F6)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
             </div>
-        </section>
-
-        <section id="features" class="features-section">
-            <h2>游戏特性</h2>
-            <div class="features">
-                <div class="feature">
-                    <h3>史诗冒险</h3>
-                    <p>探索广阔的奇幻世界，与各种神秘生物相遇</p>
-                </div>
-                <div class="feature">
-                    <h3>魔法系统</h3>
-                    <p>掌握强大的魔法技能，成为传说中的法师</p>
-                </div>
-                <div class="feature">
-                    <h3>开源精神</h3>
-                    <p>基于开源社区，持续更新与优化</p>
-                </div>
+            <h3 data-zh="系统缓存" data-en="System Cache">系统缓存</h3>
+            <p data-zh="清理浏览器、应用程序和系统产生的缓存文件，安全释放空间" data-en="Clean browser, app and system cache files to safely free up space">清理浏览器、应用程序和系统产生的缓存文件，安全释放空间</p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#10B981,#06B6D4)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
             </div>
-        </section>
-
-        <section id="play" class="game-section">
-            <h2>开始游戏</h2>
-            <div class="game-container">
-                <div class="game-placeholder">
-                    <h3>游戏开发中</h3>
-                    <p>我们正在开发一个精彩的魔法冒险游戏</p>
-                    <p>敬请期待...</p>
-                    <div class="coming-soon-timer">
-                        <p>预计发布时间：2025年1月16日</p>
-                    </div>
-                    <div class="development-status">
-                        <p>开发进度：</p>
-                        <ul>
-                            <li>✓ 游戏设计完成</li>
-                            <li>✓ 故事剧情确定</li>
-                            <li>→ 核心玩法开发中</li>
-                            <li>⋯ 美术资源制作</li>
-                            <li>⋯ 音效配乐</li>
-                        </ul>
-                    </div>
-                </div>
+            <h3 data-zh="应用残留" data-en="App Leftovers">应用残留</h3>
+            <p data-zh="清除已卸载应用遗留的配置文件、偏好设置和数据缓存" data-en="Remove leftover configs, preferences and data from uninstalled apps">清除已卸载应用遗留的配置文件、偏好设置和数据缓存</p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#F59E0B,#EF4444)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="12" x2="2" y2="12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/></svg>
             </div>
-        </section>
-    </main>
+            <h3 data-zh="大文件" data-en="Large Files">大文件</h3>
+            <p data-zh="查找并管理占用大量磁盘空间的文件，快速定位空间消耗" data-en="Find and manage files consuming significant disk space">查找并管理占用大量磁盘空间的文件，快速定位空间消耗</p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#8B5CF6,#EC4899)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <h3 data-zh="开发者垃圾" data-en="Developer Junk">开发者垃圾</h3>
+            <p data-zh="清理 Xcode DerivedData、npm/yarn 缓存、CocoaPods 等开发产物" data-en="Clean Xcode DerivedData, npm/yarn cache, CocoaPods and build artifacts">清理 Xcode DerivedData、npm/yarn 缓存、CocoaPods 等开发产物</p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#64748B,#475569)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <h3 data-zh="日志文件" data-en="Log Files">日志文件</h3>
+            <p data-zh="清除系统和应用产生的旧日志与崩溃报告，保持系统整洁" data-en="Remove old system/app logs and crash reports to keep your system tidy">清除系统和应用产生的旧日志与崩溃报告，保持系统整洁</p>
+          </div>
+          <div class="feature-card fade-up">
+            <div class="feature-icon" style="background:linear-gradient(135deg,#F97316,#F59E0B)">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <h3 data-zh="下载管理" data-en="Download Manager">下载管理</h3>
+            <p data-zh="整理下载文件夹中的过期安装包和临时文件，自动按时间分类" data-en="Organize expired installers and temp files in Downloads, sorted by age">整理下载文件夹中的过期安装包和临时文件，自动按时间分类</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <footer>
-        <p>&copy; 2024 Arken Age. All rights reserved.</p>
-    </footer>
+    <!-- ==================== SAFETY ==================== -->
+    <section class="section section-alt" id="safety">
+      <div class="container">
+        <h2 class="section-title fade-up" data-zh="安全为先" data-en="Safety First">安全为先</h2>
+        <p class="section-subtitle fade-up" data-zh="三层安全机制保护您的重要文件，每一步操作都在掌控之中" data-en="Three-layer safety protects your important files — every action under your control">三层安全机制保护您的重要文件，每一步操作都在掌控之中</p>
+        <div class="safety-grid">
+          <div class="safety-card fade-up">
+            <div class="safety-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <h3 data-zh="受保护路径" data-en="Protected Paths">受保护路径</h3>
+            <p data-zh="系统关键目录永不触碰：/System、~/.ssh、~/Library/Keychains 等核心路径硬编码保护" data-en="Critical system dirs never touched: /System, ~/.ssh, ~/Library/Keychains — hardcoded protection">系统关键目录永不触碰：/System、~/.ssh、~/Library/Keychains 等核心路径硬编码保护</p>
+            <span class="safety-badge safe" data-zh="硬编码保护" data-en="Hardcoded">硬编码保护</span>
+          </div>
+          <div class="safety-card fade-up">
+            <div class="safety-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg></div>
+            <h3 data-zh="废纸篓优先" data-en="Trash First">废纸篓优先</h3>
+            <p data-zh="默认将文件移入废纸篓而非永久删除，30 天内可随时恢复" data-en="Files move to Trash by default, recoverable within 30 days">默认将文件移入废纸篓而非永久删除，30 天内可随时恢复</p>
+            <span class="safety-badge caution" data-zh="可恢复" data-en="Recoverable">可恢复</span>
+          </div>
+          <div class="safety-card fade-up">
+            <div class="safety-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+            <h3 data-zh="完整日志" data-en="Audit Logging">完整日志</h3>
+            <p data-zh="每次清理操作完整记录到日志文件，支持事后审计追溯" data-en="Every cleanup is fully logged for post-action audit and traceability">每次清理操作完整记录到日志文件，支持事后审计追溯</p>
+            <span class="safety-badge info" data-zh="可审计" data-en="Auditable">可审计</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <script src="js/main.js"></script>
+    <!-- ==================== PRIVACY ==================== -->
+    <section class="section" id="privacy">
+      <div class="container">
+        <h2 class="section-title fade-up" data-zh="隐私保护" data-en="Privacy Protection">隐私保护</h2>
+        <p class="section-subtitle fade-up" data-zh="MacSweep 完全在本地运行，你的数据只属于你自己" data-en="MacSweep runs entirely locally — your data belongs only to you">MacSweep 完全在本地运行，你的数据只属于你自己</p>
+        <div class="privacy-grid">
+          <div class="privacy-card fade-up">
+            <div class="privacy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+            <h3 data-zh="零数据收集" data-en="Zero Data Collection">零数据收集</h3>
+            <p data-zh="不收集、不存储、不传输任何个人信息或用户数据" data-en="No personal info or user data is collected, stored, or transmitted">不收集、不存储、不传输任何个人信息或用户数据</p>
+          </div>
+          <div class="privacy-card fade-up">
+            <div class="privacy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <h3 data-zh="本地扫描" data-en="Local Scanning">本地扫描</h3>
+            <p data-zh="文件扫描仅在您的设备上执行，路径信息绝不上传" data-en="Scanning runs only on your device — paths are never uploaded">文件扫描仅在您的设备上执行，路径信息绝不上传</p>
+          </div>
+          <div class="privacy-card fade-up">
+            <div class="privacy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+            <h3 data-zh="无遥测" data-en="No Telemetry">无遥测</h3>
+            <p data-zh="无分析统计、无崩溃上报、无网络通信，完全离线运行" data-en="No analytics, no crash reporting, no network — fully offline">无分析统计、无崩溃上报、无网络通信，完全离线运行</p>
+          </div>
+          <div class="privacy-card fade-up">
+            <div class="privacy-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <h3 data-zh="无需账户" data-en="No Account">无需账户</h3>
+            <p data-zh="无需注册或登录，下载即用，不收集任何身份信息" data-en="No registration or login — download and use immediately">无需注册或登录，下载即用，不收集任何身份信息</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== DOWNLOAD ==================== -->
+    <section class="section section-download" id="download">
+      <div class="container download-content">
+        <div class="download-glow"></div>
+        <h2 class="section-title fade-up" data-zh="开始使用 MacSweep" data-en="Get Started with MacSweep">开始使用 MacSweep</h2>
+        <div class="download-meta fade-up">
+          <span class="dl-version">v0.1.0</span>
+          <span class="sep">·</span>
+          <span data-zh="macOS 12 或更高版本" data-en="macOS 12 or later">macOS 12 或更高版本</span>
+          <span class="sep">·</span>
+          <span>Apple Silicon & Intel</span>
+        </div>
+        <a href="https://github.com/MbappeWU/arkenage-website/releases/latest/download/MacSweep.dmg" class="btn-primary btn-lg fade-up">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span data-zh="下载 MacSweep.dmg" data-en="Download MacSweep.dmg">下载 MacSweep.dmg</span>
+        </a>
+        <div class="download-links fade-up">
+          <a href="https://github.com/MbappeWU/arkenage-website" target="_blank" rel="noopener" data-zh="GitHub 源码" data-en="Source Code">GitHub 源码</a>
+          <span class="sep">·</span>
+          <a href="https://github.com/MbappeWU/arkenage-website/releases" target="_blank" rel="noopener" data-zh="历史版本" data-en="All Releases">历史版本</a>
+        </div>
+        <p class="download-note fade-up" data-zh="Developer ID 签名 · Apple 公证 · 开源免费" data-en="Developer ID Signed · Apple Notarized · Open Source & Free">Developer ID 签名 · Apple 公证 · 开源免费</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none"><path d="M16 6l2.5 6.5L25 15l-6.5 2.5L16 24l-2.5-6.5L7 15l6.5-2.5L16 6z" fill="url(#flg)"/><defs><linearGradient id="flg" x1="7" y1="6" x2="25" y2="24"><stop stop-color="#8B5CF6"/><stop offset="1" stop-color="#6366F1"/></linearGradient></defs></svg>
+        <span>MacSweep</span>
+      </div>
+      <div class="footer-links">
+        <a href="#privacy" data-zh="隐私政策" data-en="Privacy Policy">隐私政策</a>
+        <a href="https://github.com/MbappeWU/arkenage-website" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <p class="footer-copy">Copyright 2024-2026 MacSweep. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
 </body>
-</html> 
+</html>
