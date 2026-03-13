@@ -151,11 +151,47 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 /* ==================================================================
+   LAUNCH BANNER
+   ================================================================== */
+.launch-banner {
+  background: linear-gradient(90deg, var(--accent-purple), var(--accent-indigo));
+  color: #fff; text-align: center;
+  padding: 10px 0; font-size: 14px; font-weight: 500;
+  position: relative; z-index: 101;
+}
+
+.launch-banner-inner {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; flex-wrap: wrap;
+}
+
+.launch-badge {
+  background: rgba(255,255,255,0.2); padding: 2px 10px;
+  border-radius: 999px; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.launch-cta {
+  background: rgba(255,255,255,0.2); padding: 4px 14px;
+  border-radius: 6px; font-weight: 600; font-size: 13px;
+  transition: background 0.2s;
+}
+.launch-cta:hover { background: rgba(255,255,255,0.35); }
+
+/* --- Language Link (EN page) --- */
+.lang-link {
+  font-size: 13px; font-weight: 600; color: var(--text-secondary);
+  padding: 5px 10px; border: 1px solid var(--border); border-radius: 8px;
+  transition: all 0.2s;
+}
+.lang-link:hover { color: var(--text-primary); border-color: var(--border-hover); }
+
+/* ==================================================================
    HERO
    ================================================================== */
 .hero {
   position: relative; min-height: 100vh; display: flex; align-items: center;
-  padding: 120px 0 80px; overflow: hidden;
+  padding: 140px 0 80px; overflow: hidden;
 }
 
 .hero-content { text-align: center; position: relative; z-index: 1; }
@@ -303,6 +339,122 @@ img { max-width: 100%; height: auto; display: block; }
 .privacy-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
 
 /* ==================================================================
+   COMPARISON TABLE
+   ================================================================== */
+.comparison-table {
+  max-width: 800px; margin: 0 auto;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+
+.comparison-table table {
+  width: 100%; border-collapse: collapse;
+  background: rgba(22, 25, 34, 0.6);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.comparison-table th, .comparison-table td {
+  padding: 14px 20px; text-align: center;
+  border-bottom: 1px solid var(--border); font-size: 14px;
+}
+
+.comparison-table th {
+  background: rgba(22, 25, 34, 0.8); font-weight: 600;
+  color: var(--text-secondary); font-size: 13px; text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.comparison-table th.highlight {
+  color: var(--accent-purple);
+  background: rgba(139, 92, 246, 0.08);
+}
+
+.comparison-table td:first-child { text-align: left; font-weight: 500; }
+
+.comparison-table td.highlight {
+  background: rgba(139, 92, 246, 0.04);
+  color: var(--accent-purple); font-weight: 600;
+}
+
+.comparison-table tr:last-child td { border-bottom: none; }
+
+/* ==================================================================
+   PRICING
+   ================================================================== */
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 24px; max-width: 720px; margin: 0 auto;
+}
+
+.pricing-card {
+  padding: 32px 28px; border-radius: var(--radius-xl);
+  background: rgba(22, 25, 34, 0.6);
+  border: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  transition: transform 0.3s, border-color 0.3s;
+  position: relative;
+}
+.pricing-card:hover { transform: translateY(-4px); border-color: var(--border-hover); }
+
+.pricing-featured {
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(22, 25, 34, 0.8);
+  box-shadow: 0 0 40px rgba(139, 92, 246, 0.1);
+}
+
+.pricing-popular {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
+  color: #fff; font-size: 12px; font-weight: 700;
+  padding: 5px 16px; border-radius: 999px;
+  white-space: nowrap;
+}
+
+.pricing-header { text-align: center; margin-bottom: 24px; }
+.pricing-header h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+
+.pricing-price {
+  font-size: 40px; font-weight: 900; letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.pricing-original {
+  font-size: 18px; font-weight: 500; color: var(--text-muted);
+  text-decoration: line-through; margin-right: 8px;
+}
+
+.pricing-unit { font-size: 16px; font-weight: 500; color: var(--text-secondary); }
+
+.pricing-period {
+  font-size: 13px; color: var(--text-muted); margin-top: 4px;
+}
+
+.pricing-features {
+  list-style: none; flex: 1; margin-bottom: 24px;
+}
+
+.pricing-features li {
+  padding: 8px 0; font-size: 14px; color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  position: relative; padding-left: 24px;
+}
+.pricing-features li:last-child { border-bottom: none; }
+
+.pricing-features li::before {
+  content: "✓"; position: absolute; left: 0;
+  color: var(--accent-green); font-weight: 700;
+}
+
+.pricing-btn {
+  width: 100%; justify-content: center; text-align: center;
+}
+
+.pricing-alt {
+  text-align: center; font-size: 12px; color: var(--text-muted);
+  margin-top: 12px;
+}
+
+/* ==================================================================
    DOWNLOAD
    ================================================================== */
 .section-download { text-align: center; }
@@ -381,6 +533,12 @@ img { max-width: 100%; height: auto; display: block; }
   .privacy-grid { grid-template-columns: 1fr; }
 
   .footer-inner { flex-direction: column; text-align: center; }
+
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+
+  .comparison-table th, .comparison-table td { padding: 10px 12px; font-size: 13px; }
+
+  .launch-banner-inner { font-size: 13px; gap: 8px; }
 }
 
 @media (max-width: 480px) {

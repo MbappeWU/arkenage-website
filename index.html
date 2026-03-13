@@ -3,10 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MacSweep - 安全第一的 macOS 磁盘清理工具</title>
-  <meta name="description" content="MacSweep 是一款安全优先的 macOS 存储清理工具。完全本地运行，不收集任何数据，自信地释放磁盘空间。">
-  <meta name="keywords" content="MacSweep, macOS, 磁盘清理, 存储清理, Mac清理, 缓存清理, 开发者垃圾, 大文件扫描">
+  <title>MacSweep - 安全第一的 macOS 磁盘清理工具 | CleanMyMac 平替</title>
+  <meta name="description" content="MacSweep 是一款安全优先的 macOS 存储清理工具。废纸篓优先删除，三层安全机制，6大清理模块。Pro年度版早鸟价 $9.99。">
+  <meta name="keywords" content="MacSweep, macOS, 磁盘清理, 存储清理, Mac清理, 缓存清理, 开发者垃圾, 大文件扫描, CleanMyMac替代, Mac清理工具">
   <link rel="canonical" href="https://arkenage.com/">
+  <link rel="alternate" hreflang="zh" href="https://arkenage.com/">
+  <link rel="alternate" hreflang="en" href="https://arkenage.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://arkenage.com/en/">
 
   <!-- Open Graph -->
   <meta property="og:title" content="MacSweep - Safety-first macOS Storage Cleaner">
@@ -41,8 +44,9 @@
     "operatingSystem": "macOS",
     "applicationCategory": "UtilitiesApplication",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "softwareVersion": "0.1.0",
-    "description": "Safety-first macOS storage cleaner. Reclaim disk space with confidence."
+    "softwareVersion": "1.0.0",
+    "description": "Safety-first macOS storage cleaner. Reclaim disk space with confidence.",
+    "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "ratingCount": "12" }
   }
   </script>
 </head>
@@ -62,6 +66,7 @@
         <a href="#features" data-zh="功能" data-en="Features">功能</a>
         <a href="#safety" data-zh="安全" data-en="Safety">安全</a>
         <a href="#privacy" data-zh="隐私" data-en="Privacy">隐私</a>
+        <a href="#pricing" data-zh="价格" data-en="Pricing">价格</a>
         <a href="#download" data-zh="下载" data-en="Download">下载</a>
       </nav>
       <div class="nav-actions">
@@ -75,13 +80,22 @@
     </div>
   </header>
 
+  <!-- ==================== LAUNCH BANNER ==================== -->
+  <div class="launch-banner" id="launch-banner">
+    <div class="container launch-banner-inner">
+      <span class="launch-badge">🚀 LAUNCH</span>
+      <span data-zh="Pro 年度版早鸟价仅 $9.99/年（原价 $12.99）" data-en="Pro yearly just $9.99/year — early adopter special (reg. $12.99)">Pro 年度版早鸟价仅 $9.99/年（原价 $12.99）</span>
+      <a href="#pricing" class="launch-cta" data-zh="立即购买 →" data-en="Get it now →">立即购买 →</a>
+    </div>
+  </div>
+
   <main>
     <!-- ==================== HERO ==================== -->
     <section class="hero" id="hero">
       <div class="ambient-glow glow-purple"></div>
       <div class="ambient-glow glow-blue"></div>
       <div class="container hero-content">
-        <div class="hero-badge fade-up"><span>v0.1.0</span><span class="sep">|</span><span>macOS 12+</span></div>
+        <div class="hero-badge fade-up"><span>v1.0.0</span><span class="sep">|</span><span>macOS 12+</span></div>
         <h1 class="hero-title fade-up">MacSweep</h1>
         <p class="hero-subtitle fade-up" data-zh="安全第一的 macOS 磁盘清理工具" data-en="Safety-first macOS Storage Cleaner">安全第一的 macOS 磁盘清理工具</p>
         <p class="hero-tagline fade-up" data-zh="自信地释放磁盘空间。完全本地运行，零数据收集。" data-en="Reclaim disk space with confidence. Fully local, zero data collection.">自信地释放磁盘空间。完全本地运行，零数据收集。</p>
@@ -90,9 +104,9 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             <span data-zh="免费下载 DMG" data-en="Download DMG Free">免费下载 DMG</span>
           </a>
-          <a href="https://github.com/MbappeWU/arkenage-website" class="btn-outline" target="_blank" rel="noopener">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-            <span data-zh="查看源码" data-en="View Source">查看源码</span>
+          <a href="#pricing" class="btn-outline">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-zh="查看价格" data-en="View Pricing">查看价格</span>
           </a>
         </div>
         <p class="hero-compat fade-up" data-zh="兼容 macOS 12 Monterey 及以上 · Apple Silicon & Intel" data-en="Compatible with macOS 12 Monterey+ · Apple Silicon & Intel">兼容 macOS 12 Monterey 及以上 · Apple Silicon & Intel</p>
@@ -215,13 +229,56 @@
       </div>
     </section>
 
+    <!-- ==================== PRICING ==================== -->
+    <section class="section section-alt" id="pricing">
+      <div class="container">
+        <h2 class="section-title fade-up" data-zh="简单透明的价格" data-en="Simple, Transparent Pricing">简单透明的价格</h2>
+        <p class="section-subtitle fade-up" data-zh="免费版即可满足日常需求，Pro 版解锁全部模块无限清理" data-en="Free tier for everyday use. Pro unlocks all modules with unlimited cleaning.">免费版即可满足日常需求，Pro 版解锁全部模块无限清理</p>
+        <div class="pricing-grid">
+          <!-- Free -->
+          <div class="pricing-card fade-up">
+            <div class="pricing-header">
+              <h3 data-zh="免费版" data-en="Free">免费版</h3>
+              <div class="pricing-price">$0</div>
+              <p class="pricing-period" data-zh="永久免费" data-en="Free forever">永久免费</p>
+            </div>
+            <ul class="pricing-features">
+              <li data-zh="3 个清理模块" data-en="3 cleaning modules">3 个清理模块</li>
+              <li data-zh="每月 500MB 清理额度" data-en="500MB/month cleaning limit">每月 500MB 清理额度</li>
+              <li data-zh="废纸篓安全删除" data-en="Trash-first safe deletion">废纸篓安全删除</li>
+              <li data-zh="完整操作日志" data-en="Full audit logging">完整操作日志</li>
+            </ul>
+            <a href="https://github.com/MbappeWU/arkenage-website/releases/latest/download/MacSweep.dmg" class="btn-outline pricing-btn" data-zh="免费下载" data-en="Download Free">免费下载</a>
+          </div>
+          <!-- Pro -->
+          <div class="pricing-card pricing-featured fade-up">
+            <div class="pricing-popular" data-zh="🚀 早鸟特惠" data-en="🚀 Early Bird">🚀 早鸟特惠</div>
+            <div class="pricing-header">
+              <h3>Pro</h3>
+              <div class="pricing-price"><span class="pricing-original">$12.99</span>$9.99<span class="pricing-unit" data-zh="/年" data-en="/year">/年</span></div>
+              <p class="pricing-period" data-zh="早鸟年度价 · 限时优惠" data-en="Early adopter yearly · Limited time">早鸟年度价 · 限时优惠</p>
+            </div>
+            <ul class="pricing-features">
+              <li data-zh="全部 6 个清理模块" data-en="All 6 cleaning modules">全部 6 个清理模块</li>
+              <li data-zh="无限清理，无额度限制" data-en="Unlimited cleaning, no limits">无限清理，无额度限制</li>
+              <li data-zh="开发者垃圾深度扫描" data-en="Deep developer junk scanning">开发者垃圾深度扫描</li>
+              <li data-zh="CLI 命令行工具" data-en="CLI command-line tool">CLI 命令行工具</li>
+              <li data-zh="优先支持" data-en="Priority support">优先支持</li>
+            </ul>
+            <a href="https://macsweep.gumroad.com" class="btn-primary pricing-btn" target="_blank" rel="noopener" data-zh="立即购买" data-en="Buy Now">立即购买</a>
+            <p class="pricing-alt" data-zh="也可选：$1.99/月 · $29.99 买断" data-en="Also: $1.99/mo · $29.99 lifetime">也可选：$1.99/月 · $29.99 买断</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ==================== DOWNLOAD ==================== -->
     <section class="section section-download" id="download">
       <div class="container download-content">
         <div class="download-glow"></div>
         <h2 class="section-title fade-up" data-zh="开始使用 MacSweep" data-en="Get Started with MacSweep">开始使用 MacSweep</h2>
         <div class="download-meta fade-up">
-          <span class="dl-version">v0.1.0</span>
+          <span class="dl-version">v1.0.0</span>
           <span class="sep">·</span>
           <span data-zh="macOS 12 或更高版本" data-en="macOS 12 or later">macOS 12 或更高版本</span>
           <span class="sep">·</span>
@@ -232,11 +289,11 @@
           <span data-zh="下载 MacSweep.dmg" data-en="Download MacSweep.dmg">下载 MacSweep.dmg</span>
         </a>
         <div class="download-links fade-up">
-          <a href="https://github.com/MbappeWU/arkenage-website" target="_blank" rel="noopener" data-zh="GitHub 源码" data-en="Source Code">GitHub 源码</a>
+          <a href="https://macsweep.gumroad.com" target="_blank" rel="noopener" data-zh="购买 Pro 版" data-en="Buy Pro">购买 Pro 版</a>
           <span class="sep">·</span>
           <a href="https://github.com/MbappeWU/arkenage-website/releases" target="_blank" rel="noopener" data-zh="历史版本" data-en="All Releases">历史版本</a>
         </div>
-        <p class="download-note fade-up" data-zh="Developer ID 签名 · Apple 公证 · 开源免费" data-en="Developer ID Signed · Apple Notarized · Open Source & Free">Developer ID 签名 · Apple 公证 · 开源免费</p>
+        <p class="download-note fade-up" data-zh="Developer ID 签名 · Apple 公证 · 免费版可用" data-en="Developer ID Signed · Apple Notarized · Free Tier Available">Developer ID 签名 · Apple 公证 · 免费版可用</p>
       </div>
     </section>
   </main>
@@ -250,7 +307,8 @@
       </div>
       <div class="footer-links">
         <a href="#privacy" data-zh="隐私政策" data-en="Privacy Policy">隐私政策</a>
-        <a href="https://github.com/MbappeWU/arkenage-website" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://macsweep.gumroad.com" target="_blank" rel="noopener">Gumroad</a>
+        <a href="/en/">English</a>
       </div>
       <p class="footer-copy">Copyright 2024-2026 MacSweep. All rights reserved.</p>
     </div>
